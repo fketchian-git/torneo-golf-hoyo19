@@ -3,7 +3,7 @@ import pandas as pd
 
 # --- CONFIGURACIÓN DE LA HOJA DE GOOGLE ---
 # Reemplaza con tu ID real de Google Sheets
-SHEET_ID = "https://docs.google.com/spreadsheets/d/1y3UgOy3gjJSJYM1GBmZYeATYhUZaz9Xv690CUX-m8Xw/edit?usp=sharing"
+SHEET_ID = "1y3UgOy3gjJSJYM1GBmZYeATYhUZaz9Xv690CUX-m8Xw"
 SHEET_NAME = "scores"
 URL = f"https://docs.google.com/spreadsheets/d/{SHEET_ID}/gviz/tq?tqx=out:csv&sheet={SHEET_NAME}"
 
