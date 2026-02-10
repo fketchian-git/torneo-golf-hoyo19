@@ -53,8 +53,8 @@ st.title("⛳ El Hoyo 19 - El Canton - Tour 2026")
 
 menu = st.sidebar.radio("Navegación", ["Leaderboard", "Reglamento", "Cronograma"])
 df_actual = load_data()
-st.write("Depuración: Leyendo la hoja...")
-st.write(df_actual) # Esto te mostrará en la web qué está leyendo realmente
+# --- st.write("Depuración: Leyendo la hoja...") ---
+# --- st.write(df_actual) # Esto te mostrará en la web qué está leyendo realmente ---
 
 if menu == "Leaderboard":
     st.header("🏆 Tabla General")
