@@ -12,11 +12,19 @@ st.set_page_config(page_title="El Hoyo 19", layout="wide")
 # --- CARGA DE DATOS ---
 def load_data():
     try:
-        # Cargamos los datos directamente desde la URL de Google Sheets
-        return pd.read_csv(URL)
-    except:
-        return pd.DataFrame(columns=["Fecha", "Jugador", "Campo", "Puntos_Stableford"])
-
+        # Agregamos un parámetro aleatorio para evitar que Google o Streamlit usen caché vieja
+        import time
+        url_cache_buster = f"{URL}&cache={int(time.time())}"
+        df = pd.read_csv(url_cache_buster)
+        
+        if df.empty:
+            st.error("El archivo se leyó pero está VACÍO. Revisá que los datos empiecen en la Fila 1.")
+        return df
+    except Exception as e:
+        st.error(f"Error de conexión: {e}")
+        # Esto nos dirá si es un error de 404 (URL mal), 403 (Permisos) o formato
+        return pd.DataFrame()
+        
 # --- LÓGICA DE RANKING ---
 def calcular_ranking(df):
     if df.empty: return pd.DataFrame()
