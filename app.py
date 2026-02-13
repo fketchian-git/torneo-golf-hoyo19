@@ -8,54 +8,64 @@ st.set_page_config(page_title="El Hoyo 19", layout="wide", initial_sidebar_state
 
 ID_PLANILLA = "1y3UgOy3gjJSJYM1GBmZYeATYhUZaz9Xv690CUX-m8Xw"
 URL = f"https://docs.google.com/spreadsheets/d/{ID_PLANILLA}/export?format=csv&gid=0"
+# URL para la pestaña de Jugadores (Necesitás el GID de esa pestaña)
+# Tip: Entrá a la pestaña Jugadores en tu navegador y fijate el número al final de la URL (gid=XXXX)
+# Si no lo sabés, podés usar el nombre de la hoja así:
+URL_JUGADORES = f"https://docs.google.com/spreadsheets/d/{ID_PLANILLA}/gviz/tq?tqx=out:csv&sheet=Jugadores"
 
 def load_data():
     try:
-        return pd.read_csv(URL)
+        df_scores = pd.read_csv(URL_SCORES)
+        try:
+            df_jugadores = pd.read_csv(URL_JUGADORES)
+            # Unimos las dos tablas usando la columna 'Jugador' como clave
+            df_completo = pd.merge(df_scores, df_jugadores, on="Jugador", how="left")
+            return df_completo
+        except:
+            # Si falla la carga de jugadores, devolvemos solo scores
+            return df_scores
     except:
         return pd.DataFrame()
 
-# --- LÓGICA DE POSICIONES TIPO GOLF ---
 def obtener_ranking_formateado(df):
     if df.empty: return pd.DataFrame()
     
-    # 1. Agrupar y calcular puntos
     df["Puntos_Stableford"] = pd.to_numeric(df["Puntos_Stableford"])
     resumen = []
+    
     for jugador in df["Jugador"].unique():
         data_jugador = df[df["Jugador"] == jugador]
         scores = sorted(data_jugador["Puntos_Stableford"].tolist(), reverse=True)
         total_8 = sum(scores[:8])
-        # Intentar obtener foto y país si existen en las columnas, sino poner default
-        foto = data_jugador["Foto"].iloc[0] if "Foto" in df.columns else "https://www.w3schools.com/howto/img_avatar.png"
-        bandera = data_jugador["Pais"].iloc[0] if "Pais" in df.columns else "https://cdn-icons-png.flaticon.com/512/921/921443.png"
+        
+        # Ahora sí tomamos la foto y país reales del merge
+        foto = data_jugador["Foto"].iloc[0] if "Foto" in data_jugador.columns and pd.notna(data_jugador["Foto"].iloc[0]) else "https://www.w3schools.com/howto/img_avatar.png"
+        pais = data_jugador["Pais"].iloc[0] if "Pais" in data_jugador.columns and pd.notna(data_jugador["Pais"].iloc[0]) else "https://cdn-icons-png.flaticon.com/512/921/921443.png"
         
         resumen.append({
             "Foto": foto,
-            "Pais": bandera,
+            "Pais": pais,
             "Jugador": jugador,
             "Puntos": total_8,
             "Fechas": len(scores)
         })
     
+    # ... (El resto de la lógica de las posiciones "T" se mantiene igual) ...
     rank_df = pd.DataFrame(resumen).sort_values(by="Puntos", ascending=False).reset_index(drop=True)
     
-    # 2. Calcular Posiciones con "T" para empates
     posiciones = []
     puntos_lista = rank_df["Puntos"].tolist()
-    
     for i, pts in enumerate(puntos_lista):
         count = puntos_lista.count(pts)
-        real_pos = i + 1
         if count > 1:
-            # Buscar la posición del primero que tiene este mismo puntaje
             primera_aparicion = puntos_lista.index(pts) + 1
             posiciones.append(f"T{primera_aparicion}")
         else:
-            posiciones.append(str(real_pos))
-            
+            posiciones.append(str(i + 1))
+    
     rank_df.insert(0, "Pos", posiciones)
     return rank_df
+    
 
 # --- INTERFAZ ---
 st.image("https://images.unsplash.com/photo-1535131749006-b7f58c99034b?q=80&w=2070&auto=format&fit=crop", use_container_width=True)
