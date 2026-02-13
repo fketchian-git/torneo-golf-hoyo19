@@ -94,18 +94,18 @@ st.markdown("---")
 df_actual = load_data()
 
 if st.session_state.menu == "🏆 Ranking":
-    st.subheader("Leaderboard General")
+    st.subheader("Leaderboard Oficial")
     ranking = obtener_ranking_formateado(df_actual)
     
     if not ranking.empty:
-        # Llamada directa a las clases importadas
+        # Configuración de columnas con anchos fijos para uniformidad
         config_final = {
-            "Pos": TextColumn("Pos"),
-            "Foto": ImageColumn(" ", help="Avatar"),
-            "Pais": ImageColumn(" ", help="País"),
-            "Jugador": TextColumn("Jugador"),
-            "Puntos": NumberColumn("PTS", format="%d ⛳"),
-            "Fechas": NumberColumn("F")
+            "Pos": TextColumn("Pos", width="small"),
+            "Foto": ImageColumn(" ", help="Jugador", width="small"),
+            "Pais": ImageColumn(" ", help="País", width="small"),
+            "Jugador": TextColumn("Jugador", width="medium"),
+            "Puntos": NumberColumn("PTS", format="%d ⛳", width="small"),
+            "Fechas": NumberColumn("F", width="small")
         }
         
         st.data_editor(
