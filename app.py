@@ -23,7 +23,7 @@ def obtener_ranking_formateado(df):
     df["Puntos_Stableford"] = pd.to_numeric(df["Puntos_Stableford"])
     resumen = []
     for jugador in df["Jugador"].unique():
-        data_jugador = df[df["Jugador"] == jugador]
+        data_jugador = df[df["Jugadores"] == jugador]
         scores = sorted(data_jugador["Puntos_Stableford"].tolist(), reverse=True)
         total_8 = sum(scores[:8])
         # Intentar obtener foto y país si existen en las columnas, sino poner default
