@@ -9,9 +9,9 @@ st.set_page_config(page_title="El Hoyo 19", layout="wide", initial_sidebar_state
 ID_PLANILLA = "1y3UgOy3gjJSJYM1GBmZYeATYhUZaz9Xv690CUX-m8Xw"
 URL = f"https://docs.google.com/spreadsheets/d/{ID_PLANILLA}/export?format=csv&gid=0"
 # URL para la pestaña de Jugadores (Necesitás el GID de esa pestaña)
-# Tip: Entrá a la pestaña Jugadores en tu navegador y fijate el número al final de la URL (gid=XXXX)
+# Tip: Entrá a la pestaña Jugadores en tu navegador y fijate el número al final de la URL (gid=1923787612)
 # Si no lo sabés, podés usar el nombre de la hoja así:
-URL_JUGADORES = f"https://docs.google.com/spreadsheets/d/{ID_PLANILLA}/gviz/tq?tqx=out:csv&sheet=Jugadores"
+URL_JUGADORES = f"https://docs.google.com/spreadsheets/d/{ID_PLANILLA}/export?format=csv&gid=1923787612"
 
 def load_data():
     try:
