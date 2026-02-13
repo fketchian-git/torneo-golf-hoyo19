@@ -94,30 +94,31 @@ st.markdown("---")
 df_actual = load_data()
 
 if st.session_state.menu == "🏆 Ranking":
-    # 1. Aplicamos el estilo CSS para el Header Azul Marino (Inyectado justo aquí)
+    # 1. CSS para Header Azul Marino y quitar scroll
     st.markdown("""
         <style>
-        /* Encabezado Azul Marino */
-        [data-testid="stHeader"] {background: rgba(0,0,0,0);}
-        .stDataFrame th {
+        /* Encabezado Azul Marino y Texto Blanco */
+        .stDataFrame thead tr th {
             background-color: #1e3d59 !important;
-            color: white !important;
         }
-        /* Ajuste de fuente para dispositivos móviles */
-        .stDataFrame td {
-            font-size: 14px !important;
+        .stDataFrame th div {
+            color: white !important;
+            font-weight: bold !important;
+        }
+        /* Eliminar bordes redondeados extras para que se vea más limpio */
+        .stDataFrame {
+            border: none !important;
         }
         </style>
     """, unsafe_allow_html=True)
 
     st.subheader("Leaderboard Oficial")
     
-    # Cargamos los datos
     df_actual = load_data()
     ranking = obtener_ranking_formateado(df_actual)
     
     if not ranking.empty:
-        # 2. Configuración de Columnas (Usando las clases importadas)
+        # 2. Configuración de Columnas (Usando las clases importadas arriba)
         config_final = {
             "Pos": TextColumn("Pos", width="small"),
             "Foto": ImageColumn(" ", width="small"),
@@ -127,23 +128,22 @@ if st.session_state.menu == "🏆 Ranking":
             "Fechas": NumberColumn("F", width="small")
         }
 
-        # 3. Cálculo de altura para evitar scroll (15 filas + cabecera)
-        # Aproximadamente 38px por fila para que entren los 15 participantes
-        altura_tabla = (len(ranking) + 1) * 38 + 2 
+        # 3. Altura dinámica para 15 participantes (evita scroll interno)
+        # 38px es el estándar por fila, sumamos 40 de cabecera
+        altura_calculada = (len(ranking) * 38) + 45
 
-        # 4. Mostramos la tabla con el diseño solicitado
+        # 4. Mostrar Tabla (Sin el parámetro 'disabled')
         st.dataframe(
             ranking,
             column_config=config_final,
             hide_index=True,
             width="stretch",
-            height=altura_tabla, # Esto hace que se vean todos de corrido
-            disabled=True
+            height=altura_calculada
         )
         
-        st.caption("ℹ️ El ranking suma tus 8 mejores tarjetas. 'T' indica empate (Tied).")
+        st.caption("ℹ️ Ranking basado en las mejores 8 tarjetas. 'T' = Empate.")
     else:
-        st.info("Sincronizando con Google Sheets...")
+        st.info("No hay datos disponibles en este momento.")
         
 # (Mantener las secciones de Fechas y Reglas igual que antes)
 elif st.session_state.menu == "📅 Fechas":
