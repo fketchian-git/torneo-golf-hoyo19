@@ -1,5 +1,6 @@
 import streamlit as st
 import pandas as pd
+from streamlit import column_config as cc  # <--- Agregamos este alias
 
 # --- CONFIGURACIÓN ---
 st.set_page_config(page_title="El Hoyo 19", layout="wide", initial_sidebar_state="collapsed")
@@ -77,22 +78,19 @@ if st.session_state.menu == "🏆 Ranking":
     ranking = obtener_ranking_formateado(df_actual)
     
     if not ranking.empty:
-        # Usamos una variable con nombre distinto y llamamos a la función de Streamlit
-        # Mantenemos las columnas que definimos en obtener_ranking_formateado
-        columnas_finales = {
-            "Pos": st.column_config.TextColumn("Pos"),
-            "Foto": st.column_config.ImageColumn(" ", help="Avatar"),
-            "Pais": st.column_config.ImageColumn(" ", help="País"),
-            "Jugador": st.column_config.TextColumn("Jugador"),
-            "Puntos": st.column_config.NumberColumn("PTS", format="%d ⛳"),
-            "Fechas": st.column_config.NumberColumn("F")
+        # Usamos 'cc' que es nuestro alias seguro
+        config_final = {
+            "Pos": cc.TextColumn("Pos"),
+            "Foto": cc.ImageColumn(" ", help="Avatar"),
+            "Pais": cc.ImageColumn(" ", help="País"),
+            "Jugador": cc.TextColumn("Jugador"),
+            "Puntos": cc.NumberColumn("PTS", format="%d ⛳"),
+            "Fechas": cc.NumberColumn("F")
         }
         
-        # Mostramos la tabla. 
-        # Cambié use_container_width por width="stretch" para eliminar el aviso del log.
         st.data_editor(
             ranking,
-            column_config=columnas_finales,
+            column_config=config_final,
             hide_index=True,
             width="stretch",
             disabled=True
