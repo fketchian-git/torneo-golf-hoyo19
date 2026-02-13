@@ -109,13 +109,13 @@ if st.session_state.menu == "🏆 Ranking":
     if not ranking.empty:
         # Configuración de columnas con anchos fijos para uniformidad
         config_final = {
-            "Pos": TextColumn("Pos", width="small"),
-            "Foto": ImageColumn(" ", help="Jugador", width="small"),
-            "Pais": ImageColumn(" ", help="País", width="small"),
-            "Jugador": TextColumn("Jugador", width="medium"),
-            "Puntos": NumberColumn("PTS", format="%d ⛳", width="small"),
-            "Fechas": NumberColumn("F", width="small")
-        }
+    "Pos": TextColumn("Pos", width="small"),
+    "Foto": ImageColumn(" ", width="small"), # Foto del jugador
+    "Pais": ImageColumn(" ", width="small"), # La bandera se ajustará al ancho pequeño
+    "Jugador": TextColumn("Jugador", width="medium"),
+    "Puntos": NumberColumn("PTS", format="%d ⛳", width="small"),
+    "Fechas": NumberColumn("F", width="small")
+    }
         
         st.data_editor(
             ranking,
