@@ -95,6 +95,15 @@ df_actual = load_data()
 
 if st.session_state.menu == "🏆 Ranking":
     st.subheader("Leaderboard Oficial")
+    st.markdown("""
+    <style>
+    /* Forzar altura de filas para que las imágenes se vean uniformes */
+    [data-testid="stTable"] td, [data-testid="stDataFrame"] td {
+        vertical-align: middle !important;
+        height: 50px;
+    }
+    </style>
+    """, unsafe_allow_html=True)
     ranking = obtener_ranking_formateado(df_actual)
     
     if not ranking.empty:
