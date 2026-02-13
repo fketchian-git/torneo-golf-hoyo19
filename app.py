@@ -14,16 +14,25 @@ URL_JUGADORES = f"https://docs.google.com/spreadsheets/d/{ID_PLANILLA}/export?fo
 
 def load_data():
     try:
+        # Cargamos Scores
         df_scores = pd.read_csv(URL_SCORES)
+        
+        # Cargamos Jugadores
         try:
             df_jugadores = pd.read_csv(URL_JUGADORES)
-            # Unimos las dos tablas usando la columna 'Jugador' como clave
+            
+            # Limpieza preventiva: quitar espacios en blanco de los nombres de columnas
+            df_scores.columns = df_scores.columns.str.strip()
+            df_jugadores.columns = df_jugadores.columns.str.strip()
+            
+            # Unimos las tablas. Asegurate que en ambas solapas la columna se llame 'Jugador'
             df_completo = pd.merge(df_scores, df_jugadores, on="Jugador", how="left")
             return df_completo
-        except:
-            # Si falla la carga de jugadores, devolvemos solo scores
+        except Exception as e:
+            st.warning(f"No se pudo cargar la solapa de Jugadores: {e}")
             return df_scores
-    except:
+    except Exception as e:
+        st.error(f"Error crítico cargando scores: {e}")
         return pd.DataFrame()
 
 def obtener_ranking_formateado(df):
