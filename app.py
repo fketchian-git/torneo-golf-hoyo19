@@ -94,36 +94,54 @@ st.markdown("---")
 df_actual = load_data()
 
 if st.session_state.menu == "🏆 Ranking":
-    st.subheader("Leaderboard Oficial")
+    # 1. Aplicamos el estilo CSS para el Header Azul Marino (Inyectado justo aquí)
     st.markdown("""
-    <style>
-    /* Forzar altura de filas para que las imágenes se vean uniformes */
-    [data-testid="stTable"] td, [data-testid="stDataFrame"] td {
-        vertical-align: middle !important;
-        height: 50px;
-    }
-    </style>
+        <style>
+        /* Encabezado Azul Marino */
+        [data-testid="stHeader"] {background: rgba(0,0,0,0);}
+        .stDataFrame th {
+            background-color: #1e3d59 !important;
+            color: white !important;
+        }
+        /* Ajuste de fuente para dispositivos móviles */
+        .stDataFrame td {
+            font-size: 14px !important;
+        }
+        </style>
     """, unsafe_allow_html=True)
+
+    st.subheader("Leaderboard Oficial")
+    
+    # Cargamos los datos
+    df_actual = load_data()
     ranking = obtener_ranking_formateado(df_actual)
     
     if not ranking.empty:
-        # Configuración de columnas con anchos fijos para uniformidad
+        # 2. Configuración de Columnas (Usando las clases importadas)
         config_final = {
-    "Pos": TextColumn("Pos", width="small"),
-    "Foto": ImageColumn(" ", width="small"), # Foto del jugador
-    "Pais": ImageColumn(" ", width="small"), # La bandera se ajustará al ancho pequeño
-    "Jugador": TextColumn("Jugador", width="medium"),
-    "Puntos": NumberColumn("PTS", format="%d ⛳", width="small"),
-    "Fechas": NumberColumn("F", width="small")
-    }
-        
-        st.data_editor(
+            "Pos": TextColumn("Pos", width="small"),
+            "Foto": ImageColumn(" ", width="small"),
+            "Pais": ImageColumn(" ", width="small"),
+            "Jugador": TextColumn("Jugador", width="medium"),
+            "Puntos": NumberColumn("PTS", format="%d ⛳", width="small"),
+            "Fechas": NumberColumn("F", width="small")
+        }
+
+        # 3. Cálculo de altura para evitar scroll (15 filas + cabecera)
+        # Aproximadamente 38px por fila para que entren los 15 participantes
+        altura_tabla = (len(ranking) + 1) * 38 + 2 
+
+        # 4. Mostramos la tabla con el diseño solicitado
+        st.dataframe(
             ranking,
             column_config=config_final,
             hide_index=True,
             width="stretch",
+            height=altura_tabla, # Esto hace que se vean todos de corrido
             disabled=True
         )
+        
+        st.caption("ℹ️ El ranking suma tus 8 mejores tarjetas. 'T' indica empate (Tied).")
     else:
         st.info("Sincronizando con Google Sheets...")
         
