@@ -77,20 +77,24 @@ if st.session_state.menu == "🏆 Ranking":
     ranking = obtener_ranking_formateado(df_actual)
     
     if not ranking.empty:
-        # Configuración de columnas para mostrar imágenes
-        st.column_config = {
+        # CAMBIO AQUÍ: Usamos un nombre de variable diferente (config_columnas)
+        # para no pisar la función original de Streamlit
+        config_columnas = {
             "Foto": st.column_config.ImageColumn(" ", help="Avatar"),
             "Pais": st.column_config.ImageColumn(" ", help="País"),
             "Puntos": st.column_config.NumberColumn("PTS", format="%d ⛳"),
+            "Jugador": st.column_config.TextColumn("Jugador"),
+            "Fechas": st.column_config.NumberColumn("Fechas"),
+            "Pos": st.column_config.TextColumn("Pos")
         }
         
-        # Mostramos la tabla con el nuevo formato de imágenes
+        # Mostramos la tabla con el nuevo formato
         st.data_editor(
             ranking,
-            column_config=st.column_config,
+            column_config=config_columnas, # Usamos la nueva variable
             hide_index=True,
             use_container_width=True,
-            disabled=True # Para que no sea editable
+            disabled=True
         )
     else:
         st.info("Sincronizando con Google Sheets...")
