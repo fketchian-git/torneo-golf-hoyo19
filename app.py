@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
-from streamlit import column_config as cc  # <--- Agregamos este alias
+# Importación directa de las clases para evitar el AttributeError
+from streamlit.column_config import TextColumn, ImageColumn, NumberColumn
 
 # --- CONFIGURACIÓN ---
 st.set_page_config(page_title="El Hoyo 19", layout="wide", initial_sidebar_state="collapsed")
@@ -78,14 +79,14 @@ if st.session_state.menu == "🏆 Ranking":
     ranking = obtener_ranking_formateado(df_actual)
     
     if not ranking.empty:
-        # Usamos 'cc' que es nuestro alias seguro
+        # Llamada directa a las clases importadas
         config_final = {
-            "Pos": cc.TextColumn("Pos"),
-            "Foto": cc.ImageColumn(" ", help="Avatar"),
-            "Pais": cc.ImageColumn(" ", help="País"),
-            "Jugador": cc.TextColumn("Jugador"),
-            "Puntos": cc.NumberColumn("PTS", format="%d ⛳"),
-            "Fechas": cc.NumberColumn("F")
+            "Pos": TextColumn("Pos"),
+            "Foto": ImageColumn(" ", help="Avatar"),
+            "Pais": ImageColumn(" ", help="País"),
+            "Jugador": TextColumn("Jugador"),
+            "Puntos": NumberColumn("PTS", format="%d ⛳"),
+            "Fechas": NumberColumn("F")
         }
         
         st.data_editor(
