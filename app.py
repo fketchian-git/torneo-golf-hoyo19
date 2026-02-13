@@ -73,32 +73,33 @@ st.markdown("---")
 df_actual = load_data()
 
 if st.session_state.menu == "🏆 Ranking":
-    st.subheader("Leaderboard Oficial")
+    st.subheader("Leaderboard General")
     ranking = obtener_ranking_formateado(df_actual)
     
     if not ranking.empty:
-        # CAMBIO AQUÍ: Usamos un nombre de variable diferente (config_columnas)
-        # para no pisar la función original de Streamlit
-        config_columnas = {
+        # Usamos una variable con nombre distinto y llamamos a la función de Streamlit
+        # Mantenemos las columnas que definimos en obtener_ranking_formateado
+        columnas_finales = {
+            "Pos": st.column_config.TextColumn("Pos"),
             "Foto": st.column_config.ImageColumn(" ", help="Avatar"),
             "Pais": st.column_config.ImageColumn(" ", help="País"),
-            "Puntos": st.column_config.NumberColumn("PTS", format="%d ⛳"),
             "Jugador": st.column_config.TextColumn("Jugador"),
-            "Fechas": st.column_config.NumberColumn("Fechas"),
-            "Pos": st.column_config.TextColumn("Pos")
+            "Puntos": st.column_config.NumberColumn("PTS", format="%d ⛳"),
+            "Fechas": st.column_config.NumberColumn("F")
         }
         
-        # Mostramos la tabla con el nuevo formato
+        # Mostramos la tabla. 
+        # Cambié use_container_width por width="stretch" para eliminar el aviso del log.
         st.data_editor(
             ranking,
-            column_config=config_columnas, # Usamos la nueva variable
+            column_config=columnas_finales,
             hide_index=True,
-            use_container_width=True,
+            width="stretch",
             disabled=True
         )
     else:
         st.info("Sincronizando con Google Sheets...")
-
+        
 # (Mantener las secciones de Fechas y Reglas igual que antes)
 elif st.session_state.menu == "📅 Fechas":
     st.subheader("Cronograma 2026")
