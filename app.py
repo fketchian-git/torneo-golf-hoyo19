@@ -125,7 +125,7 @@ if st.session_state.menu == "🏆 Ranking":
             "Pais": ImageColumn(" ", width="small"),
             "Jugador": TextColumn("Jugador", width="medium"),
             "Puntos": NumberColumn("PTS", format="%d ⛳", width="small"),
-            "Fechas": NumberColumn("F", width="small")
+            "Fechas": NumberColumn("Fechas", width="small")
         }
 
         # 3. Altura dinámica para 15 participantes (evita scroll interno)
