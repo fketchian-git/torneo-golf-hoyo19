@@ -1,40 +1,9 @@
 import streamlit as st
 import pandas as pd
 
-# Configuración para que se vea bien en celular
+# --- CONFIGURACIÓN ---
 st.set_page_config(page_title="El Hoyo 19", layout="wide", initial_sidebar_state="collapsed")
 
-# --- ESTILOS CSS PERSONALIZADOS ---
-st.markdown("""
-    <style>
-    .main {
-        background-color: #f5f7f9;
-    }
-    .stButton>button {
-        width: 100%;
-        border-radius: 10px;
-        height: 3em;
-        background-color: #ffffff;
-        color: #1e3d59;
-        border: 1px solid #e0e0e0;
-        font-weight: bold;
-    }
-    .stButton>button:hover {
-        border: 1px solid #2e7d32;
-        color: #2e7d32;
-    }
-    [data-testid="stMetricValue"] {
-        font-size: 24px;
-    }
-    </style>
-    """, unsafe_allow_html=True)
-
-# --- HEADER CON IMAGEN ---
-# Usamos una imagen profesional de un hoyo icónico (Kapalua o similar)
-st.image("https://images.unsplash.com/photo-1535131749006-b7f58c99034b?q=80&w=2070&auto=format&fit=crop", 
-         caption="Tour El Hoyo 19 - 2026", use_container_width=True)
-
-# --- CONFIGURACIÓN DE DATOS ---
 ID_PLANILLA = "1y3UgOy3gjJSJYM1GBmZYeATYhUZaz9Xv690CUX-m8Xw"
 URL = f"https://docs.google.com/spreadsheets/d/{ID_PLANILLA}/export?format=csv&gid=0"
 
@@ -44,58 +13,89 @@ def load_data():
     except:
         return pd.DataFrame()
 
-def calcular_ranking(df):
+# --- LÓGICA DE POSICIONES TIPO GOLF ---
+def obtener_ranking_formateado(df):
     if df.empty: return pd.DataFrame()
+    
+    # 1. Agrupar y calcular puntos
     df["Puntos_Stableford"] = pd.to_numeric(df["Puntos_Stableford"])
     resumen = []
     for jugador in df["Jugador"].unique():
-        scores = sorted(df[df["Jugador"] == jugador]["Puntos_Stableford"].tolist(), reverse=True)
+        data_jugador = df[df["Jugador"] == jugador]
+        scores = sorted(data_jugador["Puntos_Stableford"].tolist(), reverse=True)
         total_8 = sum(scores[:8])
+        # Intentar obtener foto y país si existen en las columnas, sino poner default
+        foto = data_jugador["Foto"].iloc[0] if "Foto" in df.columns else "https://www.w3schools.com/howto/img_avatar.png"
+        bandera = data_jugador["Pais"].iloc[0] if "Pais" in df.columns else "https://cdn-icons-png.flaticon.com/512/921/921443.png"
+        
         resumen.append({
+            "Foto": foto,
+            "Pais": bandera,
             "Jugador": jugador,
-            "Puntos (Top 8)": total_8,
-            "Jugadas": len(scores)
+            "Puntos": total_8,
+            "Fechas": len(scores)
         })
-    return pd.DataFrame(resumen).sort_values(by="Puntos (Top 8)", ascending=False)
+    
+    rank_df = pd.DataFrame(resumen).sort_values(by="Puntos", ascending=False).reset_index(drop=True)
+    
+    # 2. Calcular Posiciones con "T" para empates
+    posiciones = []
+    puntos_lista = rank_df["Puntos"].tolist()
+    
+    for i, pts in enumerate(puntos_lista):
+        count = puntos_lista.count(pts)
+        real_pos = i + 1
+        if count > 1:
+            # Buscar la posición del primero que tiene este mismo puntaje
+            primera_aparicion = puntos_lista.index(pts) + 1
+            posiciones.append(f"T{primera_aparicion}")
+        else:
+            posiciones.append(str(real_pos))
+            
+    rank_df.insert(0, "Pos", posiciones)
+    return rank_df
 
-# --- MENÚ DE NAVEGACIÓN POR BOTONES (MÓVIL FRIENDLY) ---
-# Creamos tres columnas para los botones del menú
-col_nav1, col_nav2, col_nav3 = st.columns(3)
+# --- INTERFAZ ---
+st.image("https://images.unsplash.com/photo-1535131749006-b7f58c99034b?q=80&w=2070&auto=format&fit=crop", use_container_width=True)
 
-if 'menu' not in st.session_state:
-    st.session_state.menu = "🏆 Ranking"
-
-with col_nav1:
-    if st.button("🏆 Ranking"):
-        st.session_state.menu = "🏆 Ranking"
-with col_nav2:
-    if st.button("📅 Fechas"):
-        st.session_state.menu = "📅 Fechas"
-with col_nav3:
-    if st.button("📜 Reglas"):
-        st.session_state.menu = "📜 Reglas"
+# Menú de navegación (Session State)
+if 'menu' not in st.session_state: st.session_state.menu = "🏆 Ranking"
+c1, c2, c3 = st.columns(3)
+with c1: 
+    if st.button("🏆 Ranking"): st.session_state.menu = "🏆 Ranking"
+with c2: 
+    if st.button("📅 Fechas"): st.session_state.menu = "📅 Fechas"
+with c3: 
+    if st.button("📜 Reglas"): st.session_state.menu = "📜 Reglas"
 
 st.markdown("---")
 
-# --- CONTENIDO SEGÚN SELECCIÓN ---
 df_actual = load_data()
 
 if st.session_state.menu == "🏆 Ranking":
-    st.subheader("Leaderboard General")
-    ranking = calcular_ranking(df_actual)
+    st.subheader("Leaderboard Oficial")
+    ranking = obtener_ranking_formateado(df_actual)
+    
     if not ranking.empty:
-        # Mostramos el podio destacado
-        top_3 = ranking.head(3)
-        cols = st.columns(3)
-        for i, row in enumerate(top_3.itertuples()):
-            cols[i].metric(f"{i+1}º {row.Jugador}", f"{row._2} pts")
+        # Configuración de columnas para mostrar imágenes
+        st.column_config = {
+            "Foto": st.column_config.ImageColumn(" ", help="Avatar"),
+            "Pais": st.column_config.ImageColumn(" ", help="País"),
+            "Puntos": st.column_config.NumberColumn("PTS", format="%d ⛳"),
+        }
         
-        st.write("")
-        st.dataframe(ranking, use_container_width=True, hide_index=True)
-        st.caption("ℹ️ El ranking suma tus 8 mejores tarjetas del año.")
+        # Mostramos la tabla con el nuevo formato de imágenes
+        st.data_editor(
+            ranking,
+            column_config=st.column_config,
+            hide_index=True,
+            use_container_width=True,
+            disabled=True # Para que no sea editable
+        )
     else:
-        st.info("Cargando datos...")
+        st.info("Sincronizando con Google Sheets...")
 
+# (Mantener las secciones de Fechas y Reglas igual que antes)
 elif st.session_state.menu == "📅 Fechas":
     st.subheader("Cronograma 2026")
     fechas = [
