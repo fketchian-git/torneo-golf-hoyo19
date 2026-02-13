@@ -1,36 +1,37 @@
 import streamlit as st
 import pandas as pd
-# Importación directa de las clases para evitar el AttributeError
 from streamlit.column_config import TextColumn, ImageColumn, NumberColumn
 
-# --- CONFIGURACIÓN ---
-st.set_page_config(page_title="El Hoyo 19", layout="wide", initial_sidebar_state="collapsed")
-
+# --- CONFIGURACIÓN GLOBAL ---
 ID_PLANILLA = "1y3UgOy3gjJSJYM1GBmZYeATYhUZaz9Xv690CUX-m8Xw"
-URL = f"https://docs.google.com/spreadsheets/d/{ID_PLANILLA}/export?format=csv&gid=0"
-# REEMPLAZÁ EL NÚMERO DESPUÉS DE gid= CON EL DE TU PESTAÑA 'JUGADORES'
+# REEMPLAZA ESTE NÚMERO con el GID que sacaste de tu navegador para la solapa Jugadores
 GID_JUGADORES = "1923787612" 
-URL_JUGADORES = f"https://docs.google.com/spreadsheets/d/{ID_PLANILLA}/export?format=csv&gid={GID_JUGADORES}"
 
 def load_data():
+    # Definimos las URLs adentro para que sean locales a la función
+    url_scores = f"https://docs.google.com/spreadsheets/d/{ID_PLANILLA}/export?format=csv&gid=0"
+    url_jugadores = f"https://docs.google.com/spreadsheets/d/{ID_PLANILLA}/export?format=csv&gid={GID_JUGADORES}"
+    
     try:
-        # Cargamos Scores
-        df_scores = pd.read_csv(URL_SCORES)
+        # 1. Intentamos cargar los scores (la base de todo)
+        df_scores = pd.read_csv(url_scores)
+        df_scores.columns = df_scores.columns.str.strip() # Limpiamos espacios en nombres de columnas
         
-        # Cargamos Jugadores
         try:
-            df_jugadores = pd.read_csv(URL_JUGADORES)
-            
-            # Limpieza preventiva: quitar espacios en blanco de los nombres de columnas
-            df_scores.columns = df_scores.columns.str.strip()
+            # 2. Intentamos cargar la info de los jugadores (fotos y banderas)
+            df_jugadores = pd.read_csv(url_jugadores)
             df_jugadores.columns = df_jugadores.columns.str.strip()
             
-            # Unimos las tablas. Asegurate que en ambas solapas la columna se llame 'Jugador'
-            df_completo = pd.merge(df_scores, df_jugadores, on="Jugador", how="left")
-            return df_completo
-        except Exception as e:
-            st.warning(f"No se pudo cargar la solapa de Jugadores: {e}")
+            # 3. Cruzamos los datos usando la columna 'Jugador' como puente
+            if "Jugador" in df_scores.columns and "Jugador" in df_jugadores.columns:
+                df_final = pd.merge(df_scores, df_jugadores, on="Jugador", how="left")
+                return df_final
+            else:
+                return df_scores
+        except:
+            # Si falla la carga de fotos, devolvemos solo los scores para que la app no muera
             return df_scores
+            
     except Exception as e:
         st.error(f"Error crítico cargando scores: {e}")
         return pd.DataFrame()
