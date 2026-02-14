@@ -169,7 +169,7 @@ if st.session_state.menu == "🏆 Ranking":
         </style>
     """, unsafe_allow_html=True)
 
-    st.subheader("Leaderboard Oficial - El Hoyo 19 - El Canton")
+    st.subheader("Leaderboard Oficial <br> El Hoyo 19 - El Canton")
     
     df_actual = load_data()
     ranking = obtener_ranking_formateado(df_actual)
