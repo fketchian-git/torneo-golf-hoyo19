@@ -186,7 +186,7 @@ if st.session_state.menu == "🏆 Ranking":
         </style>
     """, unsafe_allow_html=True)
 
-    st.subheader("Leaderboard Oficial - Hoyo 19")
+    st.subheader("Leaderboard - Hoyo 19")
     
     df_actual = load_data()
     ranking = obtener_ranking_formateado(df_actual)
@@ -247,14 +247,13 @@ if st.session_state.menu == "🏆 Ranking":
 # (Mantener las secciones de Fechas y Reglas igual que antes)
 elif st.session_state.menu == "📅 Fechas":
     st.subheader("Cronograma 2026")
-    
     st.markdown("""
         <div class="content-card">
-            <h3>Próxima Salida</h3>
+            <h4>Próxima Salida</h4>
             <p>📌 <b>Fecha 1:</b> Domingo 1 de Marzo - Pilará</p>
         </div>
     """, unsafe_allow_html=True)
-   
+
    # Abrimos tarjeta blanca
     st.markdown('<div class="content-card">', unsafe_allow_html=True)
     
