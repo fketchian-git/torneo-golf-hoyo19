@@ -115,11 +115,17 @@ st.markdown("""
         margin-top: 0;
     }
 
-    /* Títulos de sección sobre el fondo azul */
-    .stSubheader {
+   /* Títulos de sección (Subheaders) en Blanco Puro */
+    [data-testid="stSubheader"] {
         color: white !important;
-        text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+        text-align: center;
+        font-weight: bold;
+        padding-top: 10px;
     }
+    
+    /* Asegurar que el texto dentro de st.info o st.table no sea ilegible */
+    .stTable { background-color: white; border-radius: 10px; }
+    
     </style>
     """, unsafe_allow_html=True)
 
@@ -238,6 +244,9 @@ elif st.session_state.menu == "📅 Fechas":
             <p>📌 <b>Fecha 6:</b> Domingo 5 de Abril - Links del Sur</p>
         </div>
     """, unsafe_allow_html=True)
+   
+   # Envolvemos el calendario en una tarjeta blanca
+    st.markdown('<div class="content-card">', unsafe_allow_html=True)
     fechas = [
         ["1/3", "Pilará Golf", "Afuera"],
         ["28/3", "El Cantón", "Local"],
@@ -253,14 +262,30 @@ elif st.session_state.menu == "📅 Fechas":
         ["28/11", "El Cantón", "Final"]
     ]
     st.table(pd.DataFrame(fechas, columns=["Fecha", "Sede", "Tipo"]))
+    st.markdown('</div>', unsafe_allow_html=True)
     
 
 elif st.session_state.menu == "📜 Reglas":
     st.subheader("Reglamento Oficial")
-    st.info("Inscripción: $70.000 (Premios y Asados)")
+    
+    # Tarjeta para la info de inscripción
+    st.info("💡 Inscripción: $70.000 (Premios y Asados)")
+    
+    # Tarjeta blanca para los puntos y desempate
     st.markdown("""
-    - **Modalidad:** Stableford.
-    - **Hándicap:** 85% en El Cantón, 100% Fuera.
-    - **Puntos:** Albatros 5, Águila 4, Birdie 3, Par 2, Bogey 1.
-    - **Desempate:** 1º Fechas jugadas, 2º Mejores 4 fuera, 3º Mejores 4 dentro.
-    """)
+        <div class="content-card">
+            <h3>Detalles del Torneo</h3>
+            <ul>
+                <li><b>Modalidad:</b> Stableford.</li>
+                <li><b>Hándicap:</b> 85% en El Cantón, 100% Fuera.</li>
+                <li><b>Puntos:</b> Albatros 5, Águila 4, Birdie 3, Par 2, Bogey 1.</li>
+                <li><b>Desempate:</b> 
+                    <ol>
+                        <li>Fechas jugadas</li>
+                        <li>Mejores 4 fuera</li>
+                        <li>Mejores 4 dentro</li>
+                    </ol>
+                </li>
+            </ul>
+        </div>
+    """, unsafe_allow_html=True)
