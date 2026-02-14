@@ -230,6 +230,14 @@ if st.session_state.menu == "🏆 Ranking":
 # (Mantener las secciones de Fechas y Reglas igual que antes)
 elif st.session_state.menu == "📅 Fechas":
     st.subheader("Cronograma 2026")
+    st.markdown("""
+        <div class="content-card">
+            <h3>Próximas Salidas</h3>
+            <p>📌 <b>Fecha 5:</b> Sábado 21 de Marzo - Club de Golf</p>
+            <hr>
+            <p>📌 <b>Fecha 6:</b> Domingo 5 de Abril - Links del Sur</p>
+        </div>
+    """, unsafe_allow_html=True)
     fechas = [
         ["1/3", "Pilará Golf", "Afuera"],
         ["28/3", "El Cantón", "Local"],
