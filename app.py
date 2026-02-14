@@ -77,6 +77,51 @@ def obtener_ranking_formateado(df):
     
 
 # --- INTERFAZ ---
+# --- CONFIGURACIÓN DE PÁGINA Y FONDO ---
+st.set_page_config(page_title="Hoyo 19 - Tour", page_icon="⛳", layout="centered")
+
+st.markdown("""
+    <style>
+    /* 1. Fondo Azul Profundo para toda la App */
+    .stApp {
+        background: linear-gradient(180deg, #0f172a 0%, #1e293b 100%);
+    }
+
+    /* 2. Achicar el Header (Imagen superior) */
+    [data-testid="stImage"] {
+        text-align: center;
+        display: flex;
+        justify-content: center;
+    }
+    [data-testid="stImage"] img {
+        max-height: 120px; /* Ajustá este número para que sea más o menos alta */
+        width: auto;
+        object-fit: contain;
+    }
+
+    /* 3. Estilo para los títulos sobre fondo oscuro */
+    h1, h2, h3, .stSubheader {
+        color: white !important;
+        text-align: center;
+    }
+
+    /* 4. Ajuste de los botones del menú para que contrasten */
+    .stButton > button {
+        background-color: rgba(255, 255, 255, 0.1);
+        color: white;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(10px);
+    }
+    
+    .stButton > button:hover {
+        background-color: #1e3d59;
+        border-color: #d4af37;
+        color: white;
+    }
+    </style>
+    """, unsafe_allow_html=True)
+
+# Aquí iría tu imagen del logo
 st.image("https://images.unsplash.com/photo-1535131749006-b7f58c99034b?q=80&w=2070&auto=format&fit=crop", use_container_width=True)
 
 # Menú de navegación (Session State)
