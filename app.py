@@ -238,10 +238,8 @@ elif st.session_state.menu == "📅 Fechas":
     st.subheader("Cronograma 2026")
     st.markdown("""
         <div class="content-card">
-            <h3>Próximas Salidas</h3>
-            <p>📌 <b>Fecha 5:</b> Sábado 21 de Marzo - Club de Golf</p>
-            <hr>
-            <p>📌 <b>Fecha 6:</b> Domingo 5 de Abril - Links del Sur</p>
+            <h3>Próxima Salida</h3>
+            <p>📌 <b>Fecha 1:</b> Domingo 1 de Marzo - Pilará</p>
         </div>
     """, unsafe_allow_html=True)
    
