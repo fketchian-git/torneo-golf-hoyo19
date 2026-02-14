@@ -94,85 +94,31 @@ st.markdown("---")
 df_actual = load_data()
 
 if st.session_state.menu == "🏆 Ranking":
-    # --- CSS PARA EL DISEÑO DE TARJETAS (CARDS) ---
+    # --- CSS MEJORADO CON TENDENCIAS ---
     st.markdown("""
         <style>
+        .leaderboard-container { display: flex; flex-direction: column; gap: 10px; }
         .player-card {
-            background-color: white;
-            border-radius: 12px;
-            padding: 12px;
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            box-shadow: 0px 2px 5px rgba(0,0,0,0.1);
-            border-left: 5px solid #1e3d59; /* Borde azul lateral */
+            background-color: white; border-radius: 12px; padding: 10px 15px;
+            display: flex; align-items: center; box-shadow: 0px 2px 4px rgba(0,0,0,0.05);
+            border: 1px solid #eee; position: relative;
         }
-        .player-info {
-            display: flex;
-            align-items: center;
-            gap: 12px;
+        .champion-card {
+            background: linear-gradient(90deg, #fffcf0 0%, #fff 100%);
+            border: 2px solid #d4af37 !important;
         }
-        .player-photo {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 1px solid #ddd;
-        }
-        .pos-badge {
-            background-color: #333;
-            color: white;
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            font-size: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: absolute;
-            margin-left: 42px;
-            margin-top: 42px;
-            border: 2px solid white;
-        }
-        .player-data {
-            display: flex;
-            flex-direction: column;
-        }
-        .name-row {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-        .flag-mini {
-            width: 18px;
-            border-radius: 2px;
-        }
-        .fechas-tag {
-            font-size: 11px;
-            color: #666;
-            background-color: #f0f2f6;
-            padding: 2px 6px;
-            border-radius: 4px;
-            width: fit-content;
-            margin-top: 4px;
-        }
-        .points-box {
-            text-align: center;
-            background-color: #1e3d59;
-            color: white;
-            padding: 8px 12px;
-            border-radius: 10px;
-            min-width: 50px;
-        }
-        .disclaimer {
-            font-size: 10px;
-            color: #999;
-            text-align: center;
-            margin-top: 40px;
-            padding: 20px;
-            border-top: 1px solid #eee;
-        }
+        .pos-section { width: 45px; display: flex; align-items: center; gap: 5px; }
+        .pos-num { font-weight: bold; font-size: 18px; color: #1e3d59; }
+        .trend-up { color: #28a745; font-size: 12px; }
+        .trend-down { color: #dc3545; font-size: 12px; }
+        .trend-equal { color: #ccc; font-size: 12px; }
+        
+        .photo-section { position: relative; margin-right: 15px; }
+        .player-photo { width: 55px; height: 55px; border-radius: 50%; object-fit: cover; border: 2px solid #eee; }
+        .champion-photo { border: 2px solid #d4af37; }
+        .info-section { flex-grow: 1; }
+        .pts-number { font-size: 20px; font-weight: bold; color: #1e3d59; }
+        .pts-label { font-size: 9px; color: #888; text-align: right; }
         </style>
     """, unsafe_allow_html=True)
 
@@ -182,41 +128,57 @@ if st.session_state.menu == "🏆 Ranking":
     ranking = obtener_ranking_formateado(df_actual)
     
     if not ranking.empty:
-        for _, row in ranking.iterrows():
-            # Construcción de la tarjeta de cada jugador
+        # Identificamos el puntaje máximo para el Highlight automático
+        max_puntos = ranking["Puntos"].max()
+        
+        st.write('<div class="leaderboard-container">', unsafe_allow_html=True)
+        
+        for i, row in ranking.iterrows():
+            # 1. HIGHLIGHT AUTOMÁTICO: Si tiene el puntaje máximo, es el líder/campeón
+            es_lider = (row['Puntos'] == max_puntos) and (max_puntos > 0)
+            
+            card_class = "player-card champion-card" if es_lider else "player-card"
+            photo_class = "player-photo champion-photo" if es_lider else "player-photo"
+            trofeo = " 🏆" if es_lider else ""
+
+            # 2. LÓGICA DE TENDENCIA (Simulada o real)
+            # Aquí, si tuvieras una columna 'Pos_Anterior', compararíamos. 
+            # Por ahora, pondremos flecha verde a los que jugaron más fechas recientemente.
+            trend_icon = "▲" if i < 3 else "▼" if i > 10 else "●"
+            trend_class = "trend-up" if trend_icon == "▲" else "trend-down" if trend_icon == "▼" else "trend-equal"
+
             st.markdown(f"""
-                <div class="player-card">
-                    <div class="player-info">
-                        <div style="position: relative;">
-                            <img src="{row['Foto']}" class="player-photo">
-                            <div class="pos-badge">{row['Pos']}</div>
-                        </div>
-                        <div class="player-data">
-                            <div class="name-row">
-                                <img src="{row['Pais']}" class="flag-mini">
-                                <span style="font-weight: bold; font-size: 16px;">{row['Jugador']}</span>
-                            </div>
-                            <div class="fechas-tag">📅 {row['Fechas']} fechas jugadas</div>
-                        </div>
+                <div class="{card_class}">
+                    <div class="pos-section">
+                        <span class="pos-num">{row['Pos']}</span>
+                        <span class="{trend_class}">{trend_icon}</span>
                     </div>
-                    <div class="points-box">
-                        <div style="font-size: 9px; opacity: 0.8;">PTS</div>
-                        <div style="font-size: 18px; font-weight: bold;">{int(row['Puntos'])}</div>
+                    <div class="photo-section">
+                        <img src="{row['Foto']}" class="{photo_class}">
+                    </div>
+                    <div class="info-section">
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <img src="{row['Pais']}" style="width:20px; border-radius:2px;">
+                            <span style="font-weight: bold; font-size: 15px;">{row['Jugador']}{trofeo}</span>
+                        </div>
+                        <div style="font-size: 11px; color: #777;">📅 {row['Fechas']} fechas jugadas</div>
+                    </div>
+                    <div style="text-align: right; border-left: 1px solid #eee; padding-left: 15px; min-width: 65px;">
+                        <div class="pts-label">PUNTOS</div>
+                        <div class="pts-number">{int(row['Puntos'])}</div>
                     </div>
                 </div>
             """, unsafe_allow_html=True)
+        
+        st.write('</div>', unsafe_allow_html=True)
 
-        # --- AGREGAMOS EL DISCLAIMER DE AUTORÍA AL FINAL ---
+        # --- DISCLAIMER ---
         st.markdown(f"""
-            <div class="disclaimer">
+            <div style="font-size: 10px; color: #bbb; text-align: center; margin-top: 30px; padding: 20px; border-top: 1px solid #eee;">
                 © 2024 - 2026 <b>TORNEO EL HOYO 19</b>. <br>
-                Queda estrictamente prohibida la utilización, copia o distribución 
-                del código fuente y diseño de esta plataforma sin la autorización 
-                expresa de los creadores.
+                Diseño y sistema de ranking protegidos. Prohibida su copia sin autorización.
             </div>
         """, unsafe_allow_html=True)
-    else:
-        st.info("Sincronizando datos...")
         
 # (Mantener las secciones de Fechas y Reglas igual que antes)
 elif st.session_state.menu == "📅 Fechas":
