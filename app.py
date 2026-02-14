@@ -238,6 +238,21 @@ elif st.session_state.menu == "📅 Fechas":
             <p>📌 <b>Fecha 6:</b> Domingo 5 de Abril - Links del Sur</p>
         </div>
     """, unsafe_allow_html=True)
+    fechas = [
+        ["1/3", "Pilará Golf", "Afuera"],
+        ["28/3", "El Cantón", "Local"],
+        ["18/4", "A definir", "Afuera"],
+        ["9/5", "El Cantón", "Local"],
+        ["30/5", "A definir", "Afuera"],
+        ["27/6", "El Cantón", "Local"],
+        ["11/7", "A definir", "Afuera"],
+        ["8/8", "El Cantón", "Local"],
+        ["5/9", "A definir", "Afuera"],
+        ["3/10", "El Cantón", "Local"],
+        ["7/11", "A definir", "Afuera"],
+        ["28/11", "El Cantón", "Final"]
+    ]
+    st.table(pd.DataFrame(fechas, columns=["Fecha", "Sede", "Tipo"]))
     
 
 elif st.session_state.menu == "📜 Reglas":
