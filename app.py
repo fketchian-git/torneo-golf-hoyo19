@@ -92,12 +92,23 @@ st.markdown("""
         width: 100%;
         padding: 0px;
     }
-    [data-testid="stImage"] img {
-        width: 100% !important;
-        height: auto;
-        max-height: 200px; /* Ajusta este valor si quieres que sea más fina */
-        object-fit: cover; /* Hace que se adapte al ancho sin deformarse */
-        border-radius: 0px 0px 20px 20px; /* Curva suave solo abajo */
+   /* Forzar color blanco en todos los niveles de títulos */
+    .stApp h1, .stApp h2, .stApp h3, [data-testid="stSubheader"] h3 {
+        color: white !important;
+        text-align: center !important;
+        font-weight: bold !important;
+        padding-top: 10px;
+    }
+
+    /* Fix específico para el texto dentro del subheader */
+    [data-testid="stSubheader"] div div div {
+        color: white !important;
+    }
+    
+    /* Fondo de tablas para que no sean transparentes */
+    .stTable {
+        background-color: white !important;
+        border-radius: 10px;
     }
 
     /* 3. Contenedores para Fechas y Reglas (para que se lean bien) */
@@ -236,6 +247,7 @@ if st.session_state.menu == "🏆 Ranking":
 # (Mantener las secciones de Fechas y Reglas igual que antes)
 elif st.session_state.menu == "📅 Fechas":
     st.subheader("Cronograma 2026")
+    
     st.markdown("""
         <div class="content-card">
             <h3>Próxima Salida</h3>
@@ -243,8 +255,9 @@ elif st.session_state.menu == "📅 Fechas":
         </div>
     """, unsafe_allow_html=True)
    
-   # Envolvemos el calendario en una tarjeta blanca
+   # Abrimos tarjeta blanca
     st.markdown('<div class="content-card">', unsafe_allow_html=True)
+    
     fechas = [
         ["1/3", "Pilará Golf", "Afuera"],
         ["28/3", "El Cantón", "Local"],
@@ -259,7 +272,9 @@ elif st.session_state.menu == "📅 Fechas":
         ["7/11", "A definir", "Afuera"],
         ["28/11", "El Cantón", "Final"]
     ]
+    # La tabla ahora se verá con fondo blanco por el CSS de arriba
     st.table(pd.DataFrame(fechas, columns=["Fecha", "Sede", "Tipo"]))
+    
     st.markdown('</div>', unsafe_allow_html=True)
     
 
