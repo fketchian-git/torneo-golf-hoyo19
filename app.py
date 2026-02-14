@@ -82,41 +82,43 @@ st.set_page_config(page_title="Hoyo 19 - Tour", page_icon="⛳", layout="centere
 
 st.markdown("""
     <style>
-    /* 1. Fondo Azul Profundo para toda la App */
+    /* 1. Fondo Principal */
     .stApp {
         background: linear-gradient(180deg, #0f172a 0%, #1e293b 100%);
     }
 
-    /* 2. Achicar el Header (Imagen superior) */
+    /* 2. Header Full Width (ajustado al ancho) */
     [data-testid="stImage"] {
-        text-align: center;
-        display: flex;
-        justify-content: center;
+        width: 100%;
+        padding: 0px;
     }
     [data-testid="stImage"] img {
-        max-height: 120px; /* Ajustá este número para que sea más o menos alta */
-        width: auto;
-        object-fit: contain;
+        width: 100% !important;
+        height: auto;
+        max-height: 200px; /* Ajusta este valor si quieres que sea más fina */
+        object-fit: cover; /* Hace que se adapte al ancho sin deformarse */
+        border-radius: 0px 0px 20px 20px; /* Curva suave solo abajo */
     }
 
-    /* 3. Estilo para los títulos sobre fondo oscuro */
-    h1, h2, h3, .stSubheader {
-        color: white !important;
-        text-align: center;
-    }
-
-    /* 4. Ajuste de los botones del menú para que contrasten */
-    .stButton > button {
-        background-color: rgba(255, 255, 255, 0.1);
-        color: white;
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        backdrop-filter: blur(10px);
+    /* 3. Contenedores para Fechas y Reglas (para que se lean bien) */
+    .content-card {
+        background-color: white;
+        padding: 20px;
+        border-radius: 15px;
+        color: #1e293b; /* Texto oscuro sobre fondo blanco */
+        margin-bottom: 20px;
+        box-shadow: 0px 4px 10px rgba(0,0,0,0.3);
     }
     
-    .stButton > button:hover {
-        background-color: #1e3d59;
-        border-color: #d4af37;
-        color: white;
+    .content-card h3 {
+        color: #1e3d59 !important;
+        margin-top: 0;
+    }
+
+    /* Títulos de sección sobre el fondo azul */
+    .stSubheader {
+        color: white !important;
+        text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
     }
     </style>
     """, unsafe_allow_html=True)
@@ -167,7 +169,7 @@ if st.session_state.menu == "🏆 Ranking":
         </style>
     """, unsafe_allow_html=True)
 
-    st.subheader("Leaderboard Oficial")
+    st.subheader("Leaderboard Oficial - El Hoyo 19 - El Canton")
     
     df_actual = load_data()
     ranking = obtener_ranking_formateado(df_actual)
