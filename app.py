@@ -264,8 +264,10 @@ elif st.session_state.menu == "📅 Fechas":
     
 
 elif st.session_state.menu == "📜 Reglas":
+    <div class="content-card">
     st.subheader("Reglamento Oficial")
-    
+    </div>
+
     # Tarjeta para la info de inscripción
     st.info("💡 Inscripción: $70.000 (Premios y Asados)")
     
