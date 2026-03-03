@@ -258,7 +258,7 @@ elif st.session_state.menu == "📅 Fechas":
     st.markdown('<div class="content-card">', unsafe_allow_html=True)
     
     fechas = [
-        ["1/3", "Pilará Golf", "Afuera"],
+        ["1/3", "Estancias del Pilar", "Afuera"],
         ["28/3", "El Cantón", "Local"],
         ["18/4", "A definir", "Afuera"],
         ["9/5", "El Cantón", "Local"],
