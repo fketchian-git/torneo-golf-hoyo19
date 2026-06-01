@@ -250,7 +250,7 @@ elif st.session_state.menu == "📅 Fechas":
     st.markdown("""
         <div class="content-card">
             <h4>Próxima Salida</h4>
-            <p>📌 <b>Fecha 2:</b> Sabado 28 de Marzo - El Canton</p>
+            <p>📌 <b>Fecha 2:</b> Sabado 27 de junio - El Canton</p>
         </div>
     """, unsafe_allow_html=True)
 
@@ -260,15 +260,15 @@ elif st.session_state.menu == "📅 Fechas":
     fechas = [
         ["1/3", "Estancias del Pilar", "Afuera"],
         ["28/3", "El Cantón", "Local"],
-        ["18/4", "A definir", "Afuera"],
+        ["18/4", "El Cantón", "Local"],
         ["9/5", "El Cantón", "Local"],
-        ["30/5", "A definir", "Afuera"],
+        ["30/5", "El Nacional", "Afuera"],
         ["27/6", "El Cantón", "Local"],
-        ["11/7", "A definir", "Afuera"],
+        ["11/7", "Pinguinos", "Afuera"],
         ["8/8", "El Cantón", "Local"],
-        ["5/9", "A definir", "Afuera"],
+        ["5/9", "Praderas", "Afuera"],
         ["3/10", "El Cantón", "Local"],
-        ["7/11", "A definir", "Afuera"],
+        ["7/11", "Armenia", "Afuera"],
         ["28/11", "El Cantón", "Final"]
     ]
     # La tabla ahora se verá con fondo blanco por el CSS de arriba
