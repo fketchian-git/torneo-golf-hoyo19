@@ -250,7 +250,7 @@ elif st.session_state.menu == "📅 Fechas":
     st.markdown("""
         <div class="content-card">
             <h4>Próxima Salida</h4>
-            <p>📌 <b>Fecha 2:</b> Sabado 27 de junio - El Canton</p>
+            <p>📌 <b>Fecha 6:</b> Domingo 28 de junio - Pilar Golf</p>
         </div>
     """, unsafe_allow_html=True)
 
